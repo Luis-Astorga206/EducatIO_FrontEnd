@@ -72,6 +72,13 @@ const Login = () => {
                                         <button type="submit" className="form-control">Entrar</button>
                                     </div>
                                 </div>
+
+                                <div className="mt-4 text-center">
+                                    <span className="text-muted">¿No tienes cuenta? </span>
+                                    <Link to="/register" style={{ color: 'black', textDecoration: 'none', fontWeight: '600' }}>
+                                        Crear cuenta
+                                    </Link>
+                                </div>
                             </form>    
                         </div>
                     </div>

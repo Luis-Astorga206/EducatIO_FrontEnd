@@ -10,7 +10,11 @@ const authService = {
         return respuesta.data;
     },
 
-    // src/services/authService.js
+    register: async (datos) => {
+        const respuesta = await clienteAxios.post('/autenticacion/registro', datos);
+        return respuesta.data;
+    },
+
     restablecerPassword: async (datos) => {
         // La URL debe ser la que definiste en el paso anterior
         const respuesta = await clienteAxios.post('/autenticacion/restablecer-password', datos);

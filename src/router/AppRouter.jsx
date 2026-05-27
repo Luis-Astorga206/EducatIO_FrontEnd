@@ -10,6 +10,7 @@ import ConversacionesClase from '../pages/ConversacionesClase';
 import AsistenciasClase from '../pages/AsistenciasClase';
 import VisualizarAsistenciasAlumnos from '../pages/VisualizarAsistenciasAlumnos';
 import GestionarAlumnosClase from '../pages/GestionarAlumnosClase';
+import Registro from '../pages/Registro';
 
 const AppRouter = () => {
     return (
@@ -17,6 +18,7 @@ const AppRouter = () => {
             <Routes>
                 {/* Rutas públicas: Cualquiera sin la necesidad de hacer login puede verlas */}
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Registro />} />
                 <Route path="/forgot-password" element={<RestablecerContrasenia/>} />
                 
                 {/*Rutas privadas: Solo se ven cuando se a iniciado sesion(token necesario)*/}
