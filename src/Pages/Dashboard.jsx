@@ -47,7 +47,7 @@ const Dashboard = () => {
     };
 
     const abrirAsistencias = (clase) => {
-        navigate(`/clase/${clase.Codigo_PK}/mis-asistencias`, { state: { clase } });
+        navigate(`/dashboard/clase/${clase.Codigo_PK}/mis-asistencias`, { state: { clase } });
     };
 
     if (cargando) {
@@ -127,7 +127,7 @@ const Dashboard = () => {
                                     {/* Botones de acción */}
                                     <div className="mt-auto pt-3 border-top d-flex justify-content-between">
                                         <button className="btn btn-light btn-sm text-primary fw-bold border-0" onClick={() => abrirAsistencias(clase)}>
-                                            <i className="bi bi-calendar2-check me-1"></i> Asistencia
+                                            <i className="bi bi-calendar2-check me-1"></i> Asistencias
                                         </button>
                                         <button className="btn btn-primary btn-sm px-3 shadow-sm" onClick={() => abrirConversaciones(clase)}>
                                             Abrir

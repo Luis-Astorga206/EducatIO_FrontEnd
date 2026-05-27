@@ -68,7 +68,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
                 <li className="nav-item mb-2">
                     <Link to="/asistencias" className="nav-link text-white d-flex align-items-center">
                         <i className="bi bi-calendar-check fs-4 me-3"></i>
-                        {!collapsed && <span>Asistencias</span>}
+                        {!collapsed && <span>Asistencias de todas mis clases</span>}
                     </Link>
                 </li>
             </ul>

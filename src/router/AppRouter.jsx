@@ -22,7 +22,7 @@ const AppRouter = () => {
                     <Route element={<MainLayout />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/dashboard/clase/:codigo/conversaciones" element={<ConversacionesClase />} />
-                        <Route path="/clase/:codigo/mis-asistencias" element={<AsistenciasClase />} />
+                        <Route path="/dashboard/clase/:codigo/mis-asistencias" element={<AsistenciasClase />} />
                         {/* Agregaremos más aquí: */}
                         <Route path="/usuarios" element={<Usuarios />} />
                         <Route path="/clases" element={<GestionClases />} />
