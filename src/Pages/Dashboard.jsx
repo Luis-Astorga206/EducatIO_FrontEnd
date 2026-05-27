@@ -46,6 +46,10 @@ const Dashboard = () => {
         navigate(`/dashboard/clase/${clase.Codigo_PK}/conversaciones`, { state: { clase } });
     };
 
+    const abrirAsistencias = (clase) => {
+        navigate(`/clase/${clase.Codigo_PK}/mis-asistencias`, { state: { clase } });
+    };
+
     if (cargando) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
@@ -122,7 +126,7 @@ const Dashboard = () => {
                                     
                                     {/* Botones de acción */}
                                     <div className="mt-auto pt-3 border-top d-flex justify-content-between">
-                                        <button className="btn btn-light btn-sm text-primary fw-bold border-0">
+                                        <button className="btn btn-light btn-sm text-primary fw-bold border-0" onClick={() => abrirAsistencias(clase)}>
                                             <i className="bi bi-calendar2-check me-1"></i> Asistencia
                                         </button>
                                         <button className="btn btn-primary btn-sm px-3 shadow-sm" onClick={() => abrirConversaciones(clase)}>

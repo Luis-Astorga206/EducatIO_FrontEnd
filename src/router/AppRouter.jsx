@@ -7,6 +7,7 @@ import MainLayout from '../components/MainLayout'; // Importamos el Layout
 import Usuarios from '../pages/Usuarios';
 import GestionClases from '../pages/GestionClases';
 import ConversacionesClase from '../pages/ConversacionesClase';
+import AsistenciasClase from '../pages/AsistenciasClase';
 
 const AppRouter = () => {
     return (
@@ -21,6 +22,7 @@ const AppRouter = () => {
                     <Route element={<MainLayout />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/dashboard/clase/:codigo/conversaciones" element={<ConversacionesClase />} />
+                        <Route path="/clase/:codigo/mis-asistencias" element={<AsistenciasClase />} />
                         {/* Agregaremos más aquí: */}
                         <Route path="/usuarios" element={<Usuarios />} />
                         <Route path="/clases" element={<GestionClases />} />
