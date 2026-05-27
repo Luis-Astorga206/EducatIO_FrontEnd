@@ -47,7 +47,13 @@ const Dashboard = () => {
     };
 
     const abrirAsistencias = (clase) => {
-        navigate(`/dashboard/clase/${clase.Codigo_PK}/mis-asistencias`, { state: { clase } });
+        // Si el usuario es docente (rol 3), ver asistencias de los alumnos
+        if (auth?.rol === 3) {
+            navigate(`/dashboard/clase/${clase.Codigo_PK}/asistencias-alumnos`, { state: { clase } });
+        } else {
+            // Si es estudiante, ver sus propias asistencias
+            navigate(`/dashboard/clase/${clase.Codigo_PK}/mis-asistencias`, { state: { clase } });
+        }
     };
 
     if (cargando) {

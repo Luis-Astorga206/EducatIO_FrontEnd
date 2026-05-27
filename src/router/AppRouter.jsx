@@ -8,6 +8,7 @@ import Usuarios from '../pages/Usuarios';
 import GestionClases from '../pages/GestionClases';
 import ConversacionesClase from '../pages/ConversacionesClase';
 import AsistenciasClase from '../pages/AsistenciasClase';
+import VisualizarAsistenciasAlumnos from '../pages/VisualizarAsistenciasAlumnos';
 
 const AppRouter = () => {
     return (
@@ -23,6 +24,7 @@ const AppRouter = () => {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/dashboard/clase/:codigo/conversaciones" element={<ConversacionesClase />} />
                         <Route path="/dashboard/clase/:codigo/mis-asistencias" element={<AsistenciasClase />} />
+                        <Route path="/dashboard/clase/:codigo/asistencias-alumnos" element={<VisualizarAsistenciasAlumnos />} />
                         {/* Agregaremos más aquí: */}
                         <Route path="/usuarios" element={<Usuarios />} />
                         <Route path="/clases" element={<GestionClases />} />
