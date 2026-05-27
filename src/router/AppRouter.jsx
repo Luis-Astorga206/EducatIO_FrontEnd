@@ -8,6 +8,7 @@ import Usuarios from '../pages/Usuarios';
 import GestionClases from '../pages/GestionClases';
 import ConversacionesClase from '../pages/ConversacionesClase';
 import AsistenciasClase from '../pages/AsistenciasClase';
+import AsistenciasTodasClases from '../pages/AsistenciasTodasClases';
 import VisualizarAsistenciasAlumnos from '../pages/VisualizarAsistenciasAlumnos';
 import GestionarAlumnosClase from '../pages/GestionarAlumnosClase';
 import Registro from '../pages/Registro';
@@ -27,6 +28,7 @@ const AppRouter = () => {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/dashboard/clase/:codigo/conversaciones" element={<ConversacionesClase />} />
                         <Route path="/dashboard/clase/:codigo/mis-asistencias" element={<AsistenciasClase />} />
+                        <Route path="/asistencias" element={<AsistenciasTodasClases />} />
                         <Route path="/dashboard/clase/:codigo/asistencias-alumnos" element={<VisualizarAsistenciasAlumnos />} />
                         <Route path="/dashboard/clase/:codigo/gestionar-alumnos" element={<GestionarAlumnosClase />} />
                         {/* Agregaremos más aquí: */}

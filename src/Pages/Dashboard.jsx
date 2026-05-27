@@ -102,12 +102,20 @@ const Dashboard = () => {
                 <div className="d-flex gap-2">
                     {/* Botón para unirse a una clase (Solo Estudiantes) */}
                     {auth?.rol === 2 && (
-                        <button 
-                            className="btn btn-success shadow-sm px-4"
-                            onClick={() => setVerModalUnirse(true)}
-                        >
-                            <i className="bi bi-person-plus me-2"></i>Unirse a Clase
-                        </button>
+                        <>
+                            <button 
+                                className="btn btn-info shadow-sm px-4"
+                                onClick={() => navigate('/asistencias')}
+                            >
+                                <i className="bi bi-calendar-check me-2"></i>Asistencias de todas mis clases
+                            </button>
+                            <button 
+                                className="btn btn-success shadow-sm px-4"
+                                onClick={() => setVerModalUnirse(true)}
+                            >
+                                <i className="bi bi-person-plus me-2"></i>Unirse a Clase
+                            </button>
+                        </>
                     )}
 
                     {/* Botón para crear nueva clase (Solo Admin o Docente) */}
