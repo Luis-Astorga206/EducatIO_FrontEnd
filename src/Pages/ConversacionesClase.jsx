@@ -7,8 +7,14 @@ const ConversacionesClase = () => {
     const location = useLocation();
     const claseState = location.state?.clase;
     const [conversaciones, setConversaciones] = useState([]);
+    const [mensaje, setMensaje] = useState('');
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
+
+    const handleEnviarMensaje = (e) => {
+        e.preventDefault();
+        setMensaje('');
+    };
 
     useEffect(() => {
         const cargarConversaciones = async () => {
@@ -31,20 +37,17 @@ const ConversacionesClase = () => {
         <div style={{ minHeight: '100vh', padding: '20px' }}>
             <div className="d-flex align-items-center justify-content-between mb-4">
                 <div>
-                    <h2 className="fw-bold" style={{ color: '#3c4043' }}>Conversaciones</h2>
+                    <h2 className="fw-bold" style={{ color: '#3c4043' }}>Conversación general</h2>
                     <p className="text-muted mb-0">
                         {claseState?.NombreC
                             ? `Clase: ${claseState.NombreC} · Código ${claseState.Codigo_PK}`
                             : `Clase: ${codigo}`}
                     </p>
                 </div>
-                <button className="btn btn-primary shadow-sm px-4" style={{ borderRadius: '10px' }}>
-                    <i className="bi bi-plus-lg me-2"></i>Crear conversación
-                </button>
             </div>
 
-            <div className="card border-0 shadow-sm" style={{ borderRadius: '15px', backgroundColor: '#ffffff' }}>
-                <div className="card-body p-4">
+            <div className="card border-0 shadow-sm d-flex flex-column" style={{ borderRadius: '15px', backgroundColor: '#ffffff', minHeight: 'calc(100vh - 160px)' }}>
+                <div className="card-body p-4 flex-grow-1">
                     {cargando ? (
                         <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '220px' }}>
                             <div className="spinner-border text-primary" role="status"></div>
@@ -60,27 +63,42 @@ const ConversacionesClase = () => {
                             <p className="text-secondary">Cuando tengas conversaciones disponibles, las verás aquí.</p>
                         </div>
                     ) : (
-                        <div className="row g-3">
+                        <div>
                             {conversaciones.map((conv, index) => (
-                                <div className="col-12" key={conv.id || index}>
-                                    <div className="card shadow-sm border-0" style={{ borderRadius: '12px' }}>
-                                        <div className="card-body d-flex flex-column flex-md-row align-items-start justify-content-between gap-3">
+                                <div className="card shadow-sm border-0 mb-3" key={conv.id || index} style={{ borderRadius: '12px' }}>
+                                    <div className="card-body">
+                                        <div className="d-flex align-items-center justify-content-between mb-3">
                                             <div>
-                                                <h6 className="fw-bold mb-2">{conv.titulo || `Conversación ${index + 1}`}</h6>
-                                                <p className="mb-2 text-secondary">{conv.ultimoMensaje || 'Sin mensajes recientes'}</p>
-                                                <small className="text-muted">{conv.fechaUltimoMensaje || conv.fecha || 'Sin actividad reciente'}</small>
+                                                <h6 className="fw-bold mb-1">{conv.titulo || 'Conversación general de la clase'}</h6>
+                                                <small className="text-secondary">Administrador: {conv.administrador || 'Docente asignado'}</small>
                                             </div>
-                                            <div className="text-md-end">
-                                                <span className="badge bg-primary py-2 px-3" style={{ fontSize: '0.82rem' }}>
-                                                    {conv.mensajes ?? conv.cantidadMensajes ?? 0} mensajes
-                                                </span>
-                                            </div>
+                                            <span className="badge bg-primary py-2 px-3" style={{ fontSize: '0.82rem' }}>
+                                                {conv.mensajes ?? conv.cantidadMensajes ?? 0} mensajes
+                                            </span>
+                                        </div>
+                                        <div className="border rounded p-3" style={{ minHeight: '220px', backgroundColor: '#f8f9fa' }}>
+                                            <p className="text-secondary mb-0">{conv.ultimoMensaje || 'Aquí se mostraría el último intercambio de mensajes.'}</p>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     )}
+                </div>
+
+                <div className="card-footer bg-light border-top p-4">
+                    <form className="d-flex gap-3" onSubmit={handleEnviarMensaje}>
+                        <input
+                            className="form-control"
+                            type="text"
+                            placeholder="Escribe tu mensaje..."
+                            value={mensaje}
+                            onChange={(e) => setMensaje(e.target.value)}
+                        />
+                        <button type="submit" className="btn btn-primary px-4" style={{ borderRadius: '10px' }}>
+                            Enviar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
