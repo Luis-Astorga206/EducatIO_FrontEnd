@@ -1,13 +1,15 @@
 import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import claseService from '../services/claseService';
-import NuevaClase from '../components/NuevaClase'; 
+import NuevaClase from '../components/NuevaClase';
 
 const Dashboard = () => {
     const [clases, setClases] = useState([]);
     const { auth } = useContext(AuthContext);
     const [cargando, setCargando] = useState(true);
     const [verModal, setVerModal] = useState(false);
+    const navigate = useNavigate();
 
     // Función para cargar las clases desde el backend
     const cargarClases = async () => {
@@ -38,6 +40,10 @@ const Dashboard = () => {
         } catch (error) {
             alert("Error al crear la clase");
         }
+    };
+
+    const abrirConversaciones = (clase) => {
+        navigate(`/dashboard/clase/${clase.Codigo_PK}/conversaciones`, { state: { clase } });
     };
 
     if (cargando) {
@@ -119,7 +125,7 @@ const Dashboard = () => {
                                         <button className="btn btn-light btn-sm text-primary fw-bold border-0">
                                             <i className="bi bi-calendar2-check me-1"></i> Asistencia
                                         </button>
-                                        <button className="btn btn-primary btn-sm px-3 shadow-sm">
+                                        <button className="btn btn-primary btn-sm px-3 shadow-sm" onClick={() => abrirConversaciones(clase)}>
                                             Abrir
                                         </button>
                                     </div>
@@ -136,6 +142,7 @@ const Dashboard = () => {
                     </div>
                 )}
             </div>
+
         </div>
     );
 };
