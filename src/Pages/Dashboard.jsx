@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import claseService from '../services/claseService';
 import NuevaClase from '../components/NuevaClase';
+import ModalUnirseClase from '../components/ModalUnirseClase';
 
 const Dashboard = () => {
     const [clases, setClases] = useState([]);
     const { auth } = useContext(AuthContext);
     const [cargando, setCargando] = useState(true);
     const [verModal, setVerModal] = useState(false);
+    const [verModalUnirse, setVerModalUnirse] = useState(false);
+    const [mensajeExito, setMensajeExito] = useState('');
     const navigate = useNavigate();
 
     // Función para cargar las clases desde el backend
@@ -56,6 +59,23 @@ const Dashboard = () => {
         }
     };
 
+    const abrirGestionarAlumnos = (clase) => {
+        navigate(`/dashboard/clase/${clase.Codigo_PK}/gestionar-alumnos`, { state: { clase } });
+    };
+
+    const handleUnirseClase = async (codigoClase) => {
+        try {
+            await claseService.unirseClase(codigoClase);
+            setMensajeExito('¡Te has unido a la clase exitosamente!');
+            setVerModalUnirse(false);
+            cargarClases(); // Recargar las clases
+            setTimeout(() => setMensajeExito(''), 3000);
+        } catch (error) {
+            console.error('Error al unirse a la clase:', error);
+            alert(error.response?.data?.message || 'No se pudo unir a la clase. Verifica el código e intenta de nuevo.');
+        }
+    };
+
     if (cargando) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
@@ -67,20 +87,48 @@ const Dashboard = () => {
     return (
         <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
             
+            {/* Mensaje de éxito */}
+            {mensajeExito && (
+                <div className="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                    <i className="bi bi-check-circle me-2"></i>{mensajeExito}
+                    <button type="button" className="btn-close" onClick={() => setMensajeExito('')}></button>
+                </div>
+            )}
+            
             {/* Cabecera del Panel */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2 className="fw-bold" style={{ color: '#3c4043' }}>Panel de Clases</h2>
                 
-                {/* Botón para abrir el Modal (Solo Admin o Docente) */}
-                {(auth?.rol === 1 || auth?.rol === 3) && (
-                    <button 
-                        className="btn btn-primary shadow-sm px-4"
-                        onClick={() => setVerModal(true)}
-                    >
-                        <i className="bi bi-plus-lg me-2"></i>Nueva Clase
-                    </button>
-                )}
+                <div className="d-flex gap-2">
+                    {/* Botón para unirse a una clase (Solo Estudiantes) */}
+                    {auth?.rol === 2 && (
+                        <button 
+                            className="btn btn-success shadow-sm px-4"
+                            onClick={() => setVerModalUnirse(true)}
+                        >
+                            <i className="bi bi-person-plus me-2"></i>Unirse a Clase
+                        </button>
+                    )}
+
+                    {/* Botón para crear nueva clase (Solo Admin o Docente) */}
+                    {(auth?.rol === 1 || auth?.rol === 3) && (
+                        <button 
+                            className="btn btn-primary shadow-sm px-4"
+                            onClick={() => setVerModal(true)}
+                        >
+                            <i className="bi bi-plus-lg me-2"></i>Nueva Clase
+                        </button>
+                    )}
+                </div>
             </div>
+
+            {/* Modal para unirse a clase */}
+            {verModalUnirse && (
+                <ModalUnirseClase
+                    alCerrar={() => setVerModalUnirse(false)}
+                    alGuardar={handleUnirseClase}
+                />
+            )}
 
             {/* Renderizado del Modal */}
             {verModal && (
@@ -131,13 +179,24 @@ const Dashboard = () => {
                                     </div>
                                     
                                     {/* Botones de acción */}
-                                    <div className="mt-auto pt-3 border-top d-flex justify-content-between">
-                                        <button className="btn btn-light btn-sm text-primary fw-bold border-0" onClick={() => abrirAsistencias(clase)}>
-                                            <i className="bi bi-calendar2-check me-1"></i> Asistencias
-                                        </button>
-                                        <button className="btn btn-primary btn-sm px-3 shadow-sm" onClick={() => abrirConversaciones(clase)}>
-                                            Abrir
-                                        </button>
+                                    <div className="mt-auto pt-3 border-top">
+                                        {/* Botones para docentes */}
+                                        {auth?.rol === 3 && (
+                                            <div className="d-grid gap-2 mb-2">
+                                                <button className="btn btn-warning btn-sm fw-bold" onClick={() => abrirGestionarAlumnos(clase)}>
+                                                    <i className="bi bi-people me-1"></i>Gestionar Alumnos
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        <div className="d-flex justify-content-between gap-2">
+                                            <button className="btn btn-light btn-sm text-primary fw-bold border-0 flex-grow-1" onClick={() => abrirAsistencias(clase)}>
+                                                <i className="bi bi-calendar2-check me-1"></i> Asistencias
+                                            </button>
+                                            <button className="btn btn-primary btn-sm px-3 shadow-sm flex-grow-1" onClick={() => abrirConversaciones(clase)}>
+                                                <i className="bi bi-chat-dots me-1"></i>Abrir
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
