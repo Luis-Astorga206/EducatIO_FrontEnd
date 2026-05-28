@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import asistenciaService from '../services/asistenciaService';
+import { normalizarEstadoAsistencia, obtenerClaseBadgeEstado } from '../utils/asistenciaUtils';
 
 const AsistenciasClase = () => {
     const { codigo } = useParams();
@@ -73,9 +74,14 @@ const AsistenciasClase = () => {
                                                 <span className="fw-semibold">{registro.Fecha || registro.fecha || registro.fechaRegistro || 'Sin fecha'}</span>
                                             </td>
                                             <td className="py-3">
-                                                <span className={`badge ${registro.Estado === 'Presente' ? 'bg-success' : registro.Estado === 'Ausente' ? 'bg-danger' : 'bg-secondary'} py-2 px-3`}>
-                                                    {registro.Estado || registro.estado || registro.asistio || 'Sin estado'}
-                                                </span>
+                                                {(() => {
+                                                    const estadoVisible = normalizarEstadoAsistencia(registro.Estado || registro.estado || registro.asistio);
+                                                    return (
+                                                        <span className={`badge ${obtenerClaseBadgeEstado(estadoVisible)} py-2 px-3`}>
+                                                            {estadoVisible}
+                                                        </span>
+                                                    );
+                                                })()}
                                             </td>
                                             <td className="py-3 text-secondary">
                                                 {registro.detalle || registro.comentario || 'No hay detalle adicional'}

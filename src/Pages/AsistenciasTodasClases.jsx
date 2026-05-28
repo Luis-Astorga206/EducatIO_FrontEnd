@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import asistenciaService from '../services/asistenciaService';
+import { normalizarEstadoAsistencia, obtenerClaseBadgeEstado } from '../utils/asistenciaUtils';
 
 const AsistenciasTodasClases = () => {
     const { auth } = useContext(AuthContext);
@@ -37,11 +38,12 @@ const AsistenciasTodasClases = () => {
     }, [auth, navigate]);
 
     const asistenciasFiltradas = asistencias.filter((registro) => {
-        const texto = `${registro.NombreC || registro.Codigo_FK || registro.CodigoClase || ''} ${registro.Fecha || registro.fecha || ''} ${registro.Hora || registro.hora || ''} ${(registro.Estado || registro.estado || '').trim()}`.toLowerCase();
+        const estadoVisible = normalizarEstadoAsistencia(registro.Estado || registro.estado || registro.asistio);
+        const texto = `${registro.NombreC || registro.Codigo_FK || registro.CodigoClase || ''} ${registro.Fecha || registro.fecha || ''} ${registro.Hora || registro.hora || ''} ${estadoVisible}`.toLowerCase();
         const coincideTexto = texto.includes(filtro.toLowerCase());
-        const estadoRegistro = (registro.Estado || registro.estado || '').trim().toLowerCase();
+        const estadoRegistro = estadoVisible.toLowerCase();
         const estadoFiltroNormalizado = estadoFiltro.trim().toLowerCase();
-        const coincideEstado = estadoFiltroNormalizado === 'todas' || estadoRegistro.includes(estadoFiltroNormalizado);
+        const coincideEstado = estadoFiltroNormalizado === 'todas' || estadoRegistro === estadoFiltroNormalizado;
         return coincideTexto && coincideEstado;
     });
 
@@ -128,9 +130,14 @@ const AsistenciasTodasClases = () => {
                                                 {registro.Hora || registro.hora || 'Sin hora'}
                                             </td>
                                             <td className="py-3">
-                                                <span className={`badge ${registro.Estado === 'Presente' ? 'bg-success' : registro.Estado === 'Ausente' ? 'bg-danger' : 'bg-warning'} py-2 px-3`}>
-                                                    {registro.Estado || registro.estado || 'Desconocido'}
-                                                </span>
+                                                {(() => {
+                                                    const estadoVisible = normalizarEstadoAsistencia(registro.Estado || registro.estado || registro.asistio);
+                                                    return (
+                                                        <span className={`badge ${obtenerClaseBadgeEstado(estadoVisible)} py-2 px-3`}>
+                                                            {estadoVisible}
+                                                        </span>
+                                                    );
+                                                })()}
                                             </td>
                                             <td className="py-3 text-secondary">
                                                 {registro.detalle || registro.comentario || 'No hay detalle'}
