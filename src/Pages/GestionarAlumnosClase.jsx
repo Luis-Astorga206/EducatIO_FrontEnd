@@ -57,7 +57,7 @@ const GestionarAlumnosClase = () => {
             setTimeout(() => setMensajeExito(''), 3000);
         } catch (err) {
             console.error('Error al agregar alumno:', err);
-            alert(err.response?.data?.message || 'Error al agregar el alumno');
+            alert(err.response?.data?.mensaje || err.response?.data?.message || 'Error al agregar el alumno');
         }
     };
 
@@ -75,17 +75,18 @@ const GestionarAlumnosClase = () => {
             setTimeout(() => setMensajeExito(''), 3000);
         } catch (err) {
             console.error('Error al desasignar alumno:', err);
-            alert(err.response?.data?.message || 'Error al desasignar el alumno');
+            alert(err.response?.data?.mensaje || err.response?.data?.message || 'Error al desasignar el alumno');
         } finally {
             setEliminando(null);
         }
     };
 
     // Filtrar alumnos
-    const alumnosFiltrados = alumnos.filter(alumno =>
-        (alumno.NombreCompleto || alumno.nombreCompleto || '').toLowerCase().includes(filtroAlumno.toLowerCase()) ||
+    const alumnosFiltrados = Array.isArray(alumnos) ? alumnos.filter(alumno =>
+        (alumno.NombreCompleto || alumno.nombreCompleto || `${alumno.ApellidosU || ''} ${alumno.NombresU || ''}`)
+            .toLowerCase().includes(filtroAlumno.toLowerCase()) ||
         (alumno.Correo || alumno.correo || '').toLowerCase().includes(filtroAlumno.toLowerCase())
-    );
+    ) : [];
 
     return (
         <div style={{ minHeight: '100vh', padding: '20px', backgroundColor: '#f0f2f5' }}>
@@ -183,49 +184,54 @@ const GestionarAlumnosClase = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {alumnosFiltrados.map((alumno) => (
-                                            <tr key={alumno.IdAlumno || alumno.id}>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
-                                                             style={{ width: '40px', height: '40px', fontWeight: 'bold' }}>
-                                                            {(alumno.NombreCompleto || alumno.nombreCompleto || 'A').charAt(0).toUpperCase()}
+                                        {alumnosFiltrados.map((alumno) => {
+                                            const alumnoId = alumno.IdAlumno || alumno.IdUsuario_FK || alumno.id || 'unknown';
+                                            const alumnoNombre = alumno.NombreCompleto || alumno.nombreCompleto || `${alumno.ApellidosU || ''} ${alumno.NombresU || ''}`.trim() || 'Desconocido';
+
+                                            return (
+                                                <tr key={alumnoId}>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+                                                                 style={{ width: '40px', height: '40px', fontWeight: 'bold' }}>
+                                                                {alumnoNombre.charAt(0).toUpperCase()}
+                                                            </div>
+                                                            <div>
+                                                                <p className="mb-0 fw-semibold text-dark">
+                                                                    {alumnoNombre}
+                                                                </p>
+                                                                <small className="text-muted">
+                                                                    ID: {alumnoId}
+                                                                </small>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <p className="mb-0 fw-semibold text-dark">
-                                                                {alumno.NombreCompleto || alumno.nombreCompleto || 'Desconocido'}
-                                                            </p>
-                                                            <small className="text-muted">
-                                                                ID: {alumno.IdAlumno || alumno.id || 'N/A'}
-                                                            </small>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span style={{ color: '#5f6368' }}>
-                                                        {alumno.Correo || alumno.correo || 'No disponible'}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        className="btn btn-danger btn-sm"
-                                                        onClick={() => handleDesasignar(alumno.IdAlumno || alumno.id)}
-                                                        disabled={eliminando === (alumno.IdAlumno || alumno.id)}
-                                                    >
-                                                        {eliminando === (alumno.IdAlumno || alumno.id) ? (
-                                                            <>
-                                                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                                                Eliminando...
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <i className="bi bi-trash me-2"></i>Desasignar
-                                                            </>
-                                                        )}
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td>
+                                                        <span style={{ color: '#5f6368' }}>
+                                                            {alumno.Correo || alumno.correo || 'No disponible'}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                            className="btn btn-danger btn-sm"
+                                                            onClick={() => handleDesasignar(alumnoId)}
+                                                            disabled={eliminando === alumnoId}
+                                                        >
+                                                            {eliminando === alumnoId ? (
+                                                                <>
+                                                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                                    Eliminando...
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <i className="bi bi-trash me-2"></i>Desasignar
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

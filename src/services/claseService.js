@@ -22,7 +22,7 @@ const claseService = {
     // Métodos para gestión de alumnos en clases
     obtenerAlumnosClase: async (codigoClase) => {
         const respuesta = await clienteAxios.get(`/clases/${codigoClase}/alumnos`);
-        return respuesta.data;
+        return respuesta.data?.data || respuesta.data || [];
     },
     
     agregarAlumnoClase: async (codigoClase, emails) => {
