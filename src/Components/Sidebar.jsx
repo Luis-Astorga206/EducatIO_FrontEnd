@@ -73,6 +73,14 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
                         </Link>
                     </li>
                 )}
+                {(auth?.rol === 2 || auth?.rol === 3) && (
+                    <li className="nav-item mb-2">
+                        <Link to="/conversaciones-directas" className="nav-link text-white d-flex align-items-center">
+                            <i className="bi bi-chat-dots fs-4 me-3"></i>
+                            {!collapsed && <span>Conversaciones</span>}
+                        </Link>
+                    </li>
+                )}
             </ul>
 
             <hr />
