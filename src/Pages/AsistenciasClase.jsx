@@ -70,11 +70,11 @@ const AsistenciasClase = () => {
                                     {asistencias.map((registro, index) => (
                                         <tr key={registro.id || index} className="border-top">
                                             <td className="py-3" style={{ minWidth: '160px' }}>
-                                                <span className="fw-semibold">{registro.fecha || registro.fechaRegistro || 'Sin fecha'}</span>
+                                                <span className="fw-semibold">{registro.Fecha || registro.fecha || registro.fechaRegistro || 'Sin fecha'}</span>
                                             </td>
                                             <td className="py-3">
-                                                <span className={`badge ${registro.estado === 'Presente' ? 'bg-success' : registro.estado === 'Ausente' ? 'bg-danger' : 'bg-secondary'} py-2 px-3`}>
-                                                    {registro.estado || registro.asistio || 'Sin estado'}
+                                                <span className={`badge ${registro.Estado === 'Presente' ? 'bg-success' : registro.Estado === 'Ausente' ? 'bg-danger' : 'bg-secondary'} py-2 px-3`}>
+                                                    {registro.Estado || registro.estado || registro.asistio || 'Sin estado'}
                                                 </span>
                                             </td>
                                             <td className="py-3 text-secondary">
