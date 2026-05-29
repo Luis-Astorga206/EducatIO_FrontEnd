@@ -28,8 +28,10 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        cargarClases();
-    }, []);
+        if (auth?.rol !== 1) {
+            cargarClases();
+        }
+    }, [auth]);
 
     const colores = ['#1a73e8', '#d93025', '#1e8e3e', '#f29900', '#9c27b0'];
 
@@ -76,10 +78,67 @@ const Dashboard = () => {
         }
     };
 
-    if (cargando) {
+    if (cargando && auth?.rol !== 1) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
                 <div className="spinner-border text-primary" role="status"></div>
+            </div>
+        );
+    }
+
+    if (auth?.rol === 1) {
+        return (
+            <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
+                <div className="container py-5">
+                    <div className="text-center mb-5">
+                        <h1 className="fw-bold" style={{ color: '#3c4043' }}>Panel de Administración</h1>
+                        <p className="text-muted mx-auto" style={{ maxWidth: '680px' }}>
+                            Bienvenido al panel de administración. Aquí puedes gestionar usuarios, administrar las clases y cambiar tu contraseña personal.
+                        </p>
+                    </div>
+
+                    <div className="row g-4 justify-content-center">
+                        <div className="col-md-4">
+                            <div className="card h-100 shadow-sm border-0" style={{ borderRadius: '16px' }}>
+                                <div className="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h4 className="fw-semibold">Gestionar Usuarios</h4>
+                                        <p className="text-muted">Crea, edita y administra los usuarios del sistema.</p>
+                                    </div>
+                                    <button className="btn btn-primary mt-3" onClick={() => navigate('/usuarios')}>
+                                        Ir a Usuarios
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="card h-100 shadow-sm border-0" style={{ borderRadius: '16px' }}>
+                                <div className="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h4 className="fw-semibold">Gestionar Clases</h4>
+                                        <p className="text-muted">Supervisa y controla las clases disponibles en la plataforma.</p>
+                                    </div>
+                                    <button className="btn btn-primary mt-3" onClick={() => navigate('/clases')}>
+                                        Ir a Clases
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="card h-100 shadow-sm border-0" style={{ borderRadius: '16px' }}>
+                                <div className="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h4 className="fw-semibold">Cambiar contraseña</h4>
+                                        <p className="text-muted">Actualiza tu contraseña de acceso de forma segura.</p>
+                                    </div>
+                                    <button className="btn btn-primary mt-3" onClick={() => navigate('/dashboard/cambiar-contrasena')}>
+                                        Cambiar contraseña
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
