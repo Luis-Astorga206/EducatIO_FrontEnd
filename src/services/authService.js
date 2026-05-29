@@ -20,6 +20,11 @@ const authService = {
         const respuesta = await clienteAxios.post('/autenticacion/restablecer-password', datos);
         return respuesta.data;
     },
+
+    cambiarPassword: async (datos) => {
+        const respuesta = await clienteAxios.post('/autenticacion/cambiar-password', datos);
+        return respuesta.data;
+    },
 }
 
 export default authService;

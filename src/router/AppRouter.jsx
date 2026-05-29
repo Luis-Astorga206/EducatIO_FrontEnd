@@ -13,6 +13,7 @@ import AsistenciasClase from '../pages/AsistenciasClase';
 import AsistenciasTodasClases from '../pages/AsistenciasTodasClases';
 import VisualizarAsistenciasAlumnos from '../pages/VisualizarAsistenciasAlumnos';
 import GestionarAlumnosClase from '../pages/GestionarAlumnosClase';
+import CambiarContrasenia from '../pages/CambiarContrasenia';
 import Registro from '../pages/Registro';
 
 const AppRouter = () => {
@@ -35,6 +36,7 @@ const AppRouter = () => {
                         <Route path="/asistencias" element={<AsistenciasTodasClases />} />
                         <Route path="/dashboard/clase/:codigo/asistencias-alumnos" element={<VisualizarAsistenciasAlumnos />} />
                         <Route path="/dashboard/clase/:codigo/gestionar-alumnos" element={<GestionarAlumnosClase />} />
+                        <Route path="/dashboard/cambiar-contrasena" element={<CambiarContrasenia />} />
                         {/* Agregaremos más aquí: */}
                         <Route path="/usuarios" element={<Usuarios />} />
                         <Route path="/clases" element={<GestionClases />} />

@@ -81,6 +81,13 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
                         </Link>
                     </li>
                 )}
+
+                <li className="nav-item mb-2">
+                    <Link to="/dashboard/cambiar-contrasena" className="nav-link text-white d-flex align-items-center">
+                        <i className="bi bi-shield-lock fs-4 me-3"></i>
+                        {!collapsed && <span>Cambiar contraseña</span>}
+                    </Link>
+                </li>
             </ul>
 
             <hr />
