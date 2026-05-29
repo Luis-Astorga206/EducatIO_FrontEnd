@@ -1,96 +1,56 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import authService from '../services/authService';
+import { useNavigate } from 'react-router-dom';
+import supportContacts from '../config/supportContacts';
 
 const RestablecerContrasenia = () => {
-    const [correo, setCorreo] = useState('');
-    const [nuevaPassword, setNuevaPassword] = useState('');
-    const [confirmarPassword, setConfirmarPassword] = useState('');
     const navigate = useNavigate();
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (nuevaPassword !== confirmarPassword) {
-            alert("Las contraseñas no coinciden");
-            return;
-        }
-
-        try {
-            const data = await authService.restablecerPassword({ 
-                correo: correo, 
-                nuevaPassword: nuevaPassword 
-            });
-            
-            alert(data.mensaje);
-            navigate('/login'); // Lo mandamos al login para que use su nueva clave
-        } catch (error) {
-            alert(error.response?.data?.mensaje || "Error al restablecer contraseña");
-        }
-    };
+    const [mostrarInfo, setMostrarInfo] = useState(true);
 
     return (
         <main>
-            <section className="hero-section d-flex justify-content-center align-items-center">
+            <section className="hero-section d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-5 col-12 mx-auto">
-                            <form className="custom-form login-form" onSubmit={handleSubmit}>
-                                <h2 className="hero-title text-center mb-4 pb-2">Nueva Contraseña</h2>
+                        <div className="col-lg-6 col-12 mx-auto">
+                            <div className="card shadow-sm border-0" style={{ borderRadius: '12px' }}>
+                                <div className="card-body p-5 text-center">
+                                    <h2 className="hero-title mb-3">Recuperación de acceso</h2>
+                                    <p className="text-muted mb-4">
+                                        Lo sentimos, por favor contacte al administrador de su instituto para poder recuperar el acceso.
+                                    </p>
 
-                                <div className="form-floating mb-4 p-0">
-                                    <input 
-                                        type="email" 
-                                        className="form-control" 
-                                        required 
-                                        value={correo}
-                                        onChange={(e) => setCorreo(e.target.value)}
-                                    />
-                                    <label>Confirma tu correo electrónico</label>
-                                </div>
-
-                                <div className="form-floating mb-4 p-0">
-                                    <input 
-                                        type="password" 
-                                        className="form-control" 
-                                        required 
-                                        value={nuevaPassword}
-                                        onChange={(e) => setNuevaPassword(e.target.value)}
-                                    />
-                                    <label>Nueva contraseña</label>
-                                </div>
-
-                                <div className="form-floating mb-4 p-0">
-                                    <input 
-                                        type="password" 
-                                        className="form-control" 
-                                        required 
-                                        value={confirmarPassword}
-                                        onChange={(e) => setConfirmarPassword(e.target.value)}
-                                    />
-                                    <label>Confirmar nueva contraseña</label>
-                                </div>
-
-                                <div className="row justify-content-center align-items-center">
-                                    <div className="col-lg-12 col-12 mb-3">
-                                        <button type="submit" className="form-control btn-primary">
-                                            Actualizar Contraseña
+                                    <div className="d-flex justify-content-center gap-3">
+                                        <button className="btn btn-primary" onClick={() => navigate('/login')}>
+                                            Volver al inicio de sesión
+                                        </button>
+                                        <button className="btn btn-outline-secondary" onClick={() => setMostrarInfo(!mostrarInfo)}>
+                                            {mostrarInfo ? 'Más información' : 'Ocultar'}
                                         </button>
                                     </div>
-                                    <div className="col-lg-12 col-12 text-center">
-                                        <Link to="/login" style={{ color: 'black', textDecoration: 'none' }}>
-                                            Regresar al inicio de sesión
-                                        </Link>
-                                    </div>
+
+                                    {mostrarInfo && (
+                                        <div className="mt-4 text-start" style={{ maxWidth: '420px', margin: '0 auto' }}>
+                                            <h6 className="fw-semibold">Sugerencias</h6>
+                                            <ul className="mb-0 ps-3">
+                                                <li>Contacte con el administrador de TI de su institución.</li>
+                                                <li>Tenga a mano su correo institucional para acelerar la verificación.</li>
+                                                <li>Evite compartir sus credenciales por medios no oficiales.</li>
+                                            </ul>
+
+                                            <h6 className="fw-semibold mt-3">Contactos de soporte</h6>
+                                            <ul className="mb-0 ps-3">
+                                                {supportContacts.map((c, i) => (
+                                                    <li key={i}>
+                                                        <a href={`mailto:${c.email}`} className="text-decoration-none">{c.name}: {c.email}</a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
                                 </div>
-                            </form>    
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="video-wrap">
-                    <video autoPlay loop muted playsInline className="custom-video">
-                        <source src="/videos/video.mp4" type="video/mp4" />
-                    </video>
                 </div>
             </section>
         </main>
