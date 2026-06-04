@@ -10,12 +10,12 @@ const claseService = {
         const respuesta = await clienteAxios.post('/clases', datos);
         return respuesta.data;
     },
-    actualizar: async (codigo, datos) => {
-        const res = await clienteAxios.put(`/clases/${codigo}`, datos);
+    actualizar: async (codigoClase, datos) => {
+        const res = await clienteAxios.put(`/clases/${codigoClase}`, datos);
         return res.data;
     },
-    eliminar: async (codigo) => {
-        const respuesta = await clienteAxios.delete(`/clases/${codigo}`);
+    eliminar: async (codigoClase) => {
+        const respuesta = await clienteAxios.delete(`/clases/${codigoClase}`);
         return respuesta.data;
     },
     
