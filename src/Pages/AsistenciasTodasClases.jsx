@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import asistenciaService from '../services/asistenciaService';
 import { normalizarEstadoAsistencia, obtenerClaseBadgeEstado } from '../utils/asistenciaUtils';
+import { formatFechaHora } from '../utils/dateUtils';
 
 const AsistenciasTodasClases = () => {
     const { auth } = useContext(AuthContext);
@@ -121,10 +122,10 @@ const AsistenciasTodasClases = () => {
                                                 <span className="fw-semibold">{registro.Codigo_FK || registro.CodigoClase || 'N/A'}</span>
                                             </td>
                                             <td className="py-3" style={{ minWidth: '180px' }}>
-                                                <span>{registro.NombreC || registro.nombreC || 'Sin nombre'}</span>
+                                                <span>{registro.NombreC || registro.nombreC || registro.NombreClase || registro.Nombre || 'Sin nombre'}</span>
                                             </td>
                                             <td className="py-3">
-                                                {registro.Fecha || registro.fecha || 'Sin fecha'}
+                                                {(registro.Fecha || registro.fecha) ? formatFechaHora(registro.Fecha || registro.fecha).split(' ')[0] : 'Sin fecha'}
                                             </td>
                                             <td className="py-3">
                                                 {registro.Hora || registro.hora || 'Sin hora'}
