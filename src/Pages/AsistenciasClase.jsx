@@ -1,15 +1,21 @@
-import { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import asistenciaService from '../services/asistenciaService';
 import { normalizarEstadoAsistencia, obtenerClaseBadgeEstado } from '../utils/asistenciaUtils';
+import { formatFechaHora } from '../utils/dateUtils';
 
 const AsistenciasClase = () => {
     const { codigo } = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
+    const { auth } = useContext(AuthContext);
     const claseState = location.state?.clase;
     const [asistencias, setAsistencias] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
+
+
 
     useEffect(() => {
         const cargarAsistencias = async () => {
@@ -25,8 +31,10 @@ const AsistenciasClase = () => {
             }
         };
 
-        cargarAsistencias();
-    }, [codigo, claseState]);
+        if (auth?.rol === 2) {
+            cargarAsistencias();
+        }
+    }, [codigo, claseState, auth]);
 
     return (
         <div style={{ minHeight: '100vh', padding: '20px' }}>
@@ -71,7 +79,7 @@ const AsistenciasClase = () => {
                                     {asistencias.map((registro, index) => (
                                         <tr key={registro.id || index} className="border-top">
                                             <td className="py-3" style={{ minWidth: '160px' }}>
-                                                <span className="fw-semibold">{registro.Fecha || registro.fecha || registro.fechaRegistro || 'Sin fecha'}</span>
+                                                <span className="fw-semibold">{formatFechaHora(registro.Fecha || registro.fecha || registro.fechaRegistro, registro.Hora || registro.hora || registro.horaRegistro)}</span>
                                             </td>
                                             <td className="py-3">
                                                 {(() => {

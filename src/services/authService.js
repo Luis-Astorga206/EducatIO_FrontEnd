@@ -25,6 +25,10 @@ const authService = {
         const respuesta = await clienteAxios.post('/autenticacion/cambiar-password', datos);
         return respuesta.data;
     },
+    perfil: async () => {
+        const respuesta = await clienteAxios.get('/autenticacion/profile');
+        return respuesta.data;
+    }
 }
 
 export default authService;

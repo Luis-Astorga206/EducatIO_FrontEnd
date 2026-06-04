@@ -7,7 +7,7 @@ import ModalUnirseClase from '../components/ModalUnirseClase';
 
 const Dashboard = () => {
     const [clases, setClases] = useState([]);
-    const { auth } = useContext(AuthContext);
+    const { auth, cargando: authCargando } = useContext(AuthContext);
     const [cargando, setCargando] = useState(true);
     const [verModal, setVerModal] = useState(false);
     const [verModalUnirse, setVerModalUnirse] = useState(false);
@@ -28,10 +28,11 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        if (authCargando) return; // esperar a que se resuelva la autenticación
         if (auth?.rol !== 1) {
             cargarClases();
         }
-    }, [auth]);
+    }, [auth, authCargando]);
 
     const colores = ['#1a73e8', '#d93025', '#1e8e3e', '#f29900', '#9c27b0'];
 
@@ -78,7 +79,7 @@ const Dashboard = () => {
         }
     };
 
-    if (cargando && auth?.rol !== 1) {
+    if (cargando && authCargando) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
                 <div className="spinner-border text-primary" role="status"></div>

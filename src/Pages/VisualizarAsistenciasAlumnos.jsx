@@ -7,6 +7,7 @@ import {
     obtenerCodigoEstadoAsistencia,
     obtenerClaseBadgeEstado
 } from '../utils/asistenciaUtils';
+import { formatFechaHora } from '../utils/dateUtils';
 
 const opcionesEstados = [
     { value: 'P', label: 'Presente' },
@@ -64,8 +65,26 @@ const VisualizarAsistenciasAlumnos = () => {
     const cargarAlumnosClase = async () => {
         try {
             setCargandoAlumnos(true);
-            const alumnos = await asistenciaService.obtenerAlumnosClase(claseState?.Codigo_PK || codigo);
-            setAlumnosClase(Array.isArray(alumnos) ? alumnos : alumnos?.data || []);
+            const rawAlumnos = await asistenciaService.obtenerAlumnosClase(claseState?.Codigo_PK || codigo);
+            const alumnos = Array.isArray(rawAlumnos) ? rawAlumnos : rawAlumnos?.data || [];
+
+            // Normalizar forma de los alumnos para que tengamos siempre
+            // IdUsuario_FK, ApellidosU, NombresU, NombreCompleto y Correo
+            const alumnosNorm = alumnos.map(a => {
+                const id = a.IdUsuario_FK || a.IdAlumno || a.IdUsuario || a.Id || null;
+                const apellidos = a.ApellidosU || '';
+                const nombres = a.NombresU || '';
+                const nombreCompleto = a.NombreCompleto || `${apellidos} ${nombres}`.trim();
+                return {
+                    IdUsuario_FK: id,
+                    ApellidosU: apellidos,
+                    NombresU: nombres,
+                    NombreCompleto: nombreCompleto,
+                    Correo: a.Correo || a.correo || a.Email || a.email || '-'
+                };
+            });
+
+            setAlumnosClase(alumnosNorm);
             return alumnos;
         } catch (err) {
             console.error('Error al cargar alumnos de la clase:', err);
@@ -152,8 +171,11 @@ const VisualizarAsistenciasAlumnos = () => {
         setGuardandoPase(true);
 
         try {
-            const fecha = new Date().toISOString().split('T')[0];
-            const hora = new Date().toTimeString().split(' ')[0];
+            // Usar un único timestamp para todas las asistencias del pase
+            const ahora = new Date();
+            const fecha = ahora.toISOString().split('T')[0];
+            const hora = ahora.toTimeString().split(' ')[0];
+
             const data = alumnosClase.map((alumno) => ({
                 Fecha: fecha,
                 Hora: hora,
@@ -162,6 +184,7 @@ const VisualizarAsistenciasAlumnos = () => {
                 IdUsuario_FK: alumno.IdUsuario_FK
             }));
 
+            // Enviar las peticiones en paralelo pero usando el mismo timestamp
             await Promise.all(data.map((registro) => asistenciaService.crearAsistencia(registro)));
             setModalExito('Pase de lista guardado correctamente.');
             await cargarAsistenciasAlumnos();
@@ -355,7 +378,7 @@ const VisualizarAsistenciasAlumnos = () => {
                                                                 return (
                                                                     <tr key={registroId} style={{ borderBottom: '1px solid #dee2e6' }}>
                                                                         <td style={{ fontSize: '0.85rem' }}>
-                                                                            {registro.Fecha || registro.fecha || registro.fechaRegistro || 'Sin fecha'}
+                                                                                            {formatFechaHora(registro.Fecha || registro.fecha || registro.fechaRegistro, registro.Hora || registro.hora || registro.horaRegistro)}
                                                                         </td>
                                                                         <td style={{ fontSize: '0.85rem', minWidth: '180px' }}>
                                                                             {registroEditando === registroId ? (
@@ -445,8 +468,8 @@ const VisualizarAsistenciasAlumnos = () => {
                                         <tbody>
                                             {alumnosClase.map((alumno) => (
                                                 <tr key={alumno.IdUsuario_FK}>
-                                                    <td>{`${alumno.ApellidosU || ''} ${alumno.NombresU || ''}`.trim() || 'Sin nombre'}</td>
-                                                    <td>{alumno.Correo || alumno.correo || '-'}</td>
+                                                    <td>{alumno.NombreCompleto || `${alumno.ApellidosU || ''} ${alumno.NombresU || ''}`.trim() || 'Sin nombre'}</td>
+                                                    <td>{alumno.Correo || '-'}</td>
                                                     <td className="text-center" style={{ minWidth: '185px' }}>
                                                         <select
                                                             className="form-select form-select-sm"

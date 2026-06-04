@@ -6,7 +6,7 @@ const Usuarios = () => {
     const [editandoId, setEditandoId] = useState(null);
     const [showPassword, setShowPassword] = useState(false); // Estado para el ojo
     const [formData, setFormData] = useState({
-        NombresU: '', ApellidosU: '', Correo: '', Contraseña: '', IdRol_FK: ""
+        NombresU: '', ApellidosU: '', Correo: '', Contraseña: '', IdRol_FK: "1"
     });
 
     const cargarUsuarios = async () => {
@@ -30,19 +30,24 @@ const Usuarios = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Si estamos editando y el campo contraseña tiene texto, el backend la actualizará
+            const payload = {
+                ...formData,
+                IdRol_FK: Number(formData.IdRol_FK)
+            };
+
             if (editandoId) {
-                await usuarioService.actualizar(editandoId, formData);
+                await usuarioService.actualizar(editandoId, payload);
                 alert("Usuario actualizado (y contraseña reseteada si se ingresó una)");
             } else {
-                await usuarioService.crear(formData);
+                await usuarioService.crear(payload);
                 alert("Usuario creado");
             }
             setEditandoId(null);
-            setFormData({ NombresU: '', ApellidosU: '', Correo: '', Contraseña: '', IdRol_FK: '' });
+            setFormData({ NombresU: '', ApellidosU: '', Correo: '', Contraseña: '', IdRol_FK: '1' });
             cargarUsuarios();
         } catch (error) {
-            alert("Error en la operación");
+            console.error(error);
+            alert(error.response?.data?.mensaje || error.message || "Error en la operación");
         }
     };
 
@@ -110,7 +115,7 @@ const Usuarios = () => {
 
                         <div className="col-md-2">
                             <label className="form-label small">Rol</label>
-                            <select className="form-select" value={formData.IdRol_FK} onChange={e => setFormData({...formData, IdRol_FK: e.target.value})}>
+                            <select className="form-select" value={formData.IdRol_FK} required onChange={e => setFormData({...formData, IdRol_FK: e.target.value})}>
                                 <option value="1">Admin</option>
                                 <option value="2">Alumno</option>
                                 <option value="3">Docente</option>
