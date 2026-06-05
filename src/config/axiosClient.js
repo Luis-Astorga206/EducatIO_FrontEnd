@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const clienteAxios = axios.create({
     // Aquí pones la URL de tu API de Node.js
-    baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000/api'
+    baseURL: import.meta.env.VITE_BACKEND_URL || 'https://educatio-backend-fna5hxh3avdgcjfy.westus-01.azurewebsites.net/api'
 });
 
 // INTERCEPTOR: Antes de que salga cualquier petición hacia el backend...
